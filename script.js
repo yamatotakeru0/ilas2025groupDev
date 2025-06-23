@@ -37,8 +37,3 @@ function boxCreate() {
     boxCols.insertBefore(child1,addBox);
 
 };
-
-
-function boxErase() {
-    console.log(event.target);
-};
