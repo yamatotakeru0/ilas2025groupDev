@@ -1,5 +1,7 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
+    <head>
+    </head>
     <body>
         <link rel="stylesheet" href="style.css" type="text/css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -119,9 +121,16 @@
                     <div class="col">
                         <div class="card text-dark border-dark bg-light mb-3" style="max-width: 18rem;">
                             <div class="card-body">
-                                <form action="/addPush_python_code" method="post">
-                                    <a class="btn btn-outline-dark" href="#" role="button" onclick="boxCreate()">＋</a>
+                                <form>
+                                    <input class="form-control" type="text" name="foodTitle" placeholder="Food title">
+                                    <select class="form-select" aria-label="Default select example">
+                                    <option value="kosuu">個</option>
+                                    <option value="shokubun">食分</option>
+                                    <option value="nichibun">日分</option>
+                                    </select>
                                 </form>
+                                <button class="btn btn-outline-dark" onclick="boxCreate()">＋</button>
+                                
                             </div>
                         </div>
                     </div>
