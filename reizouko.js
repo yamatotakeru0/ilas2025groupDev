@@ -10,8 +10,6 @@ let mokuteki = "料理";
 x=localStorage.getItem('number');
 y=localStorage.getItem('name');
 //　データの保存
-
-
 localstorage.setItem('number',x);
 localstorage.setItem('name',y);
 
