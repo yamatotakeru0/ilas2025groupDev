@@ -13,6 +13,16 @@ y=localStorage.getItem('name');
 localstorage.setItem('number',x);
 localstorage.setItem('name',y);
 
+//データの削除
+function deleteButton(i, x, y) {
+    if (i > x.length || i <= 0) {
+        return [x, y];
+    } else {
+        x.splice(i - 1, 1);
+        y.splice(i - 1, 1);
+        return [x, y];
+    }
+}
 
 
 // ボタンで食品を追加
