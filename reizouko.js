@@ -1,8 +1,10 @@
 var boxCols = document.getElementById("boxCols");
+var colClass = document.getElementsByClassName("col");
 var addBox = document.getElementById("addBox");
 
-
+// ボックスを新たに生成する関数.
 function boxCreate() {
+    let foodTitle = document.getElementsByName("foodTitle")[0].value;
     let child1 = document.createElement("div");
     let child11 = document.createElement("div");
     let child111 = document.createElement("div");
@@ -27,7 +29,7 @@ function boxCreate() {
     child111.append(child1114);
     child111.append(child1115);
     child1111.append(child11111);
-    child1112.insertAdjacentHTML("beforeend","Food title")
+    child1112.insertAdjacentHTML("beforeend",foodTitle);
     child1113.insertAdjacentHTML("beforeend",'<li class="list-group-item">x個</li>');
     child1114.insertAdjacentHTML("beforeend",'<a class="btn btn-success" href="#" role="button">＋</a>');
     child1115.insertAdjacentHTML("beforeend",'<a href="#" class="btn btn-danger">－</a>');
@@ -35,53 +37,66 @@ function boxCreate() {
     console.log(child1);
 
     boxCols.insertBefore(child1,addBox);
-
+    erase();
 };
 
-require('dotenv').config();
-const { Configuration, OpenAIApi } = require('openai');
+// 「Boxを削除する関数」を各Boxの削除ボタンに付与する関数.
+function erase() {
+    for (var i=0; i < colClass.length -1; i++) {
+        colClass[i].querySelectorAll(".btn-outline-danger")[0].addEventListener('click', function() {
+            // thisはクリックした要素にあたる
+            this.closest(".col").remove();
+        } , false);
+    };
+};
+erase()
 
-// 初期データ
-let x = []; // 食品の個数
-let y = []; // 食品の名前
+// require('dotenv').config();
+// const { Configuration, OpenAIApi } = require('openai');
+
+// 初期データ.
+let foodNumbers = []; // 食品の個数.
+let foodTitles = []; // 食品の名前.
 let mokuteki = "料理";
 
-// データの取得
-x=localStorage.getItem('number');
-y=localStorage.getItem('name');
-//　データの保存
+// データの取得.
+function dataLoad(){
+    foodNumbers=localStorage.getItem('number');
+    foodTitles=localStorage.getItem('name');
+};
+
+//　データの保存.
+function dataSave(){
+    localStorage.setItem('number',foodNumbers);
+    localStorage.setItem('name',foodTitles);
+};
 
 
-localstorage.setItem('number',x);
-localstorage.setItem('name',y);
-
-
-
-// ボタンで食品を追加
+// ボタンで食品を追加.
 function bottun_add() {
-    x.push(0);
-    y.push("");
+    foodTitles.push(0);
+    foodNumbers.push("");
 }
 
-// 食品の個数をインクリメント
+// 食品の個数をインクリメント.
 function run_python_code() {
-    if (x.length > 0) {
-        x[0] += 1;
+    if (foodNumbers.length > 0) {
+        foodNumbers[0] += 1;
         console.log("～を追加しました");
     }
 }
 
-// 目的に条件を加える（例：簡単な料理）
+// 目的に条件を加える（例：簡単な料理）.
 function ryourijouken(condition) {
     mokuteki += "、" + condition;
     return mokuteki;
 }
 
-// ChatGPT APIで料理を提案
+// ChatGPT APIで料理を提案.
 async function ryourigpt() {
     let syokuzai = "";
-    for (let i = 0; i < x.length; i++) {
-        syokuzai += `${y[i]}が${x[i]}個、`;
+    for (let i = 0; i < foodNumbers.length; i++) {
+        syokuzai += `${foodTitles[i]}が${foodNumbers[i]}個、`;
     }
 
     const yosei = `今、冷蔵庫に${syokuzai}あります。この食材を使って作ることのできる${mokuteki}を教えてください`;
@@ -101,19 +116,18 @@ async function ryourigpt() {
     return reply;
 }
 
-// 以下、テスト実行用
+// 以下、テスト実行用.
 bottun_add();
-x[0] = 2;
-y[0] = "たまご";
+foodNumbers[0] = 2;
+foodTitles[0] = "たまご";
 
 bottun_add();
-x[1] = 1;
-y[1] = "トマト";
+foodNumbers[1] = 1;
+foodTitles[1] = "トマト";
 
 ryourijouken("簡単な料理");
 
-// 実行
+// 実行.
 ryourigpt().then(reply => {
     console.log("ChatGPTの提案:", reply);
 });
-

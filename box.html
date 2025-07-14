@@ -6,6 +6,10 @@
         <link rel="stylesheet" href="style.css" type="text/css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <div class="pageAll"><!--ページ全体の余白について-->
+            <button type="button" class="btn btn-primary" onclick="dataSave()">Save</button>
+            <form>
+                <input class="form-control" type="text" name="openAiApiKey" placeholder="Open AI API Key">
+            </form>
             <div class="row row-cols-1 row-cols-md-3 g-4" id="boxCols">
                 <div class="col">
                     <div class="card text-dark border-dark bg-light mb-3" style="max-width: 18rem;">
@@ -15,7 +19,7 @@
                                     <button class="btn btn-outline-danger" type="button">×</button>
                                 </form>
                             </div>
-                            <h5 class="card-title">Food title</h5>
+                            <h5 class="card-title">牛肉</h5>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">x個</li>
                             </ul>
@@ -37,7 +41,7 @@
                                     <button class="btn btn-outline-danger" type="button">×</button>
                                 </form>
                             </div>
-                            <h5 class="card-title">Food title</h5>
+                            <h5 class="card-title">トマト</h5>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">x個</li>
                             </ul>
@@ -59,7 +63,7 @@
                                     <button class="btn btn-outline-danger" type="button">×</button>
                                 </form>
                             </div>
-                            <h5 class="card-title">Food title</h5>
+                            <h5 class="card-title">卵</h5>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">x個</li>
                             </ul>
@@ -81,7 +85,7 @@
                                     <button class="btn btn-outline-danger" type="button">×</button>
                                 </form>
                             </div>
-                            <h5 class="card-title">Food title</h5>
+                            <h5 class="card-title">白菜</h5>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">x個</li>
                             </ul>
@@ -103,7 +107,7 @@
                                     <button class="btn btn-outline-danger" type="button">×</button>
                                 </form>
                             </div>
-                            <h5 class="card-title">Food title</h5>
+                            <h5 class="card-title">キャベツ</h5>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">x個</li>
                             </ul>
@@ -124,19 +128,18 @@
                                 <form>
                                     <input class="form-control" type="text" name="foodTitle" placeholder="Food title">
                                     <select class="form-select" aria-label="Default select example">
-                                    <option value="kosuu">個</option>
-                                    <option value="shokubun">食分</option>
-                                    <option value="nichibun">日分</option>
+                                        <option value="kosuu">個</option>
+                                        <option value="shokubun">食分</option>
+                                        <option value="nichibun">日分</option>
                                     </select>
                                 </form>
                                 <button class="btn btn-outline-dark" onclick="boxCreate()">＋</button>
-                                
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <script src = reizouko.js></script>
+        <script defer src = reizouko.js></script>
     </body>
 </html>
