@@ -1,5 +1,6 @@
 var boxCols = document.getElementById("boxCols");
 var colClass = document.getElementsByClassName("col");
+var colClassArray =Array.prototype.slice.call(colClass);
 var addBox = document.getElementById("addBox");
 
 // ボックスを新たに生成する関数.
@@ -30,26 +31,42 @@ function boxCreate() {
     child111.append(child1115);
     child1111.append(child11111);
     child1112.insertAdjacentHTML("beforeend",foodTitle);
-    child1113.insertAdjacentHTML("beforeend",'<li class="list-group-item">x個</li>');
+    child1113.insertAdjacentHTML("beforeend",'<li class="list-group-item">0個</li>');
     child1114.insertAdjacentHTML("beforeend",'<a class="btn btn-success" href="#" role="button">＋</a>');
     child1115.insertAdjacentHTML("beforeend",'<a href="#" class="btn btn-danger">－</a>');
     child11111.insertAdjacentHTML("beforeend",'<button class="btn btn-outline-danger" type="button">×</button>');
-    console.log(child1);
 
     boxCols.insertBefore(child1,addBox);
+    colClass = document.getElementsByClassName("col");
+    colClassArray =Array.prototype.slice.call(colClass);
+    foodArrayAdd(foodTitle);
     erase();
+    console.log(foodTitles);
+    console.log(foodNumbers);
 };
 
 // 「Boxを削除する関数」を各Boxの削除ボタンに付与する関数.
 function erase() {
     for (var i=0; i < colClass.length -1; i++) {
-        colClass[i].querySelectorAll(".btn-outline-danger")[0].addEventListener('click', function() {
-            // thisはクリックした要素にあたる
+        colClass[i].querySelectorAll(".btn-outline-danger")[0].addEventListener('click', function() {// 各Boxの削除関数.
+            // thisはクリックした要素にあたる.
+            var thisIndex =colClassArray.indexOf(this.closest(".col"));
             this.closest(".col").remove();
+            colClass = document.getElementsByClassName("col");
+            colClassArray =Array.prototype.slice.call(colClass);
+            foodTitles.splice(thisIndex ,1);
+            foodNumbers.splice(thisIndex ,1);
         } , false);
     };
 };
-erase()
+erase();
+
+// 各Boxの食材の個数のところを配列foodNumbersの要素と対応させる関数.
+function loadFoodNumber() {
+    for (var i=0; i < foodTitles.length ; i++) {
+        colClass[i].querySelectorAll(".list-group-item")[0].innerHTML = foodNumbers[i] +"個";
+    }
+};
 
 // require('dotenv').config();
 // const { Configuration, OpenAIApi } = require('openai');
@@ -72,11 +89,11 @@ function dataSave(){
 };
 
 
-// ボタンで食品を追加.
-function bottun_add() {
-    foodTitles.push(0);
-    foodNumbers.push("");
-}
+// 配列に新たな食品を追加.
+function foodArrayAdd(i) {
+    foodTitles.push(i);
+    foodNumbers.push(0);
+};
 
 // 食品の個数をインクリメント.
 function run_python_code() {
@@ -117,13 +134,22 @@ async function ryourigpt() {
 }
 
 // 以下、テスト実行用.
-bottun_add();
-foodNumbers[0] = 2;
-foodTitles[0] = "たまご";
+foodArrayAdd("牛肉");
+foodNumbers[0] = 1;
 
-bottun_add();
-foodNumbers[1] = 1;
-foodTitles[1] = "トマト";
+foodArrayAdd("トマト");
+foodNumbers[1] = 2;
+
+foodArrayAdd("卵");
+foodNumbers[2] = 3;
+
+foodArrayAdd("白菜");
+foodNumbers[3] = 4;
+
+foodArrayAdd("キャベツ");
+foodNumbers[4] = 5;
+
+loadFoodNumber();
 
 ryourijouken("簡単な料理");
 
@@ -131,3 +157,6 @@ ryourijouken("簡単な料理");
 ryourigpt().then(reply => {
     console.log("ChatGPTの提案:", reply);
 });
+
+console.log(foodTitles);
+console.log(foodNumbers);
