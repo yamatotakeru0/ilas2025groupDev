@@ -41,6 +41,7 @@ function boxCreate() {
     colClassArray =Array.prototype.slice.call(colClass);
     foodArrayAdd(foodTitle);
     erase();
+    changeFoodNumber();
     console.log(foodTitles);
     console.log(foodNumbers);
 };
@@ -67,6 +68,31 @@ function loadFoodNumber() {
         colClass[i].querySelectorAll(".list-group-item")[0].innerHTML = foodNumbers[i] +"個";
     }
 };
+
+// 「食材の個数を+1(or -1)する関数」を各Boxの+-ボタンに付与する関数.
+function changeFoodNumber() {
+    for (var i=0; i < colClass.length -1; i++) {
+        // 食材の個数を+1する関数.
+        colClass[i].querySelectorAll(".btn-success")[0].addEventListener('click', function() {// 各食材の個数を増やす関数.
+            // thisはクリックした要素にあたる.
+            var thisIndex =colClassArray.indexOf(this.closest(".col"));
+            foodNumbers[thisIndex] = foodNumbers[thisIndex] +1;
+            colClass[thisIndex].querySelectorAll(".list-group-item")[0].innerHTML = foodNumbers[thisIndex] +"個";
+        } , false);
+
+        // 食材の個数を-1する関数.
+        colClass[i].querySelectorAll(".btn-danger")[0].addEventListener('click', function() {// 各食材の個数を増やす関数.
+            // thisはクリックした要素にあたる.
+            var thisIndex =colClassArray.indexOf(this.closest(".col"));
+            if (foodNumbers[thisIndex] >= 1) {
+                foodNumbers[thisIndex] = foodNumbers[thisIndex] -1;
+            };
+            colClass[thisIndex].querySelectorAll(".list-group-item")[0].innerHTML = foodNumbers[thisIndex] +"個";
+        } , false);
+    };
+};
+changeFoodNumber();
+
 
 // require('dotenv').config();
 // const { Configuration, OpenAIApi } = require('openai');
