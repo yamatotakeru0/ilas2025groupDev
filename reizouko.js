@@ -1,7 +1,13 @@
-var boxCols = document.getElementById("boxCols");
+const boxCols = document.getElementById("boxCols");
 var colClass = document.getElementsByClassName("col");
 var colClassArray =Array.prototype.slice.call(colClass);
-var addBox = document.getElementById("addBox");
+const addBox = document.getElementById("addBox");
+const selectUnits = document.getElementById("addUnitSelect");
+let selectUnit = "個";
+selectUnits.addEventListener("change",(event) =>{
+    selectUnit = selectUnits.options[selectUnits.selectedIndex].label;
+});
+
 
 // ボックスを新たに生成する関数.
 function boxCreate() {
@@ -31,68 +37,86 @@ function boxCreate() {
     child111.append(child1115);
     child1111.append(child11111);
     child1112.insertAdjacentHTML("beforeend",foodTitle);
-    child1113.insertAdjacentHTML("beforeend",'<li class="list-group-item">0個</li>');
+    child1113.insertAdjacentHTML("beforeend",'<li class="list-group-item">0'+ selectUnit +'</li>');
     child1114.insertAdjacentHTML("beforeend",'<a class="btn btn-success" href="#" role="button">＋</a>');
     child1115.insertAdjacentHTML("beforeend",'<a href="#" class="btn btn-danger">－</a>');
     child11111.insertAdjacentHTML("beforeend",'<button class="btn btn-outline-danger" type="button">×</button>');
-
     boxCols.insertBefore(child1,addBox);
     colClass = document.getElementsByClassName("col");
     colClassArray =Array.prototype.slice.call(colClass);
     foodArrayAdd(foodTitle);
-    erase();
-    changeFoodNumber();
+    foodUnits.push(selectUnit);
+    unregister();
+    register();
     console.log(foodTitles);
     console.log(foodNumbers);
+    console.log(foodUnits);
+    console.log(selectUnit);
 };
 
-// 「Boxを削除する関数」を各Boxの削除ボタンに付与する関数.
+// Boxを削除する関数.
 function erase() {
+    var thisIndex =colClassArray.indexOf(this.closest(".col"));
+    this.closest(".col").remove();
+    colClass = document.getElementsByClassName("col");
+    colClassArray =Array.prototype.slice.call(colClass);
+    foodTitles.splice(thisIndex ,1);
+    foodNumbers.splice(thisIndex ,1);
+    foodUnits.splice(thisIndex ,1);
+};
+
+//食材の個数を+1する関数.
+function addFoodNumber() {
+    var thisIndex =colClassArray.indexOf(this.closest(".col"));
+    foodNumbers[thisIndex] = foodNumbers[thisIndex] +1;
+    colClass[thisIndex].querySelectorAll(".list-group-item")[0].innerHTML = foodNumbers[thisIndex] +foodUnits[thisIndex];
+};
+
+//食材の個数を-1する関数.
+function reduceFoodNumber() {
+    var thisIndex =colClassArray.indexOf(this.closest(".col"));
+    if (foodNumbers[thisIndex] >= 1) {
+        foodNumbers[thisIndex] = foodNumbers[thisIndex] -1;
+    };
+    colClass[thisIndex].querySelectorAll(".list-group-item")[0].innerHTML = foodNumbers[thisIndex] +foodUnits[thisIndex];
+};
+
+// erase(),addFoodNumber(),reduceFoodNumber()を各Boxのボタンに付与する関数.
+function register() {
     for (var i=0; i < colClass.length -1; i++) {
-        colClass[i].querySelectorAll(".btn-outline-danger")[0].addEventListener('click', function() {// 各Boxの削除関数.
-            // thisはクリックした要素にあたる.
-            var thisIndex =colClassArray.indexOf(this.closest(".col"));
-            this.closest(".col").remove();
-            colClass = document.getElementsByClassName("col");
-            colClassArray =Array.prototype.slice.call(colClass);
-            foodTitles.splice(thisIndex ,1);
-            foodNumbers.splice(thisIndex ,1);
-        } , false);
+        // 各Boxの削除ボタンにerase()を付与.
+        colClass[i].querySelectorAll(".btn-outline-danger")[0].addEventListener('click', erase, false);
+
+        // 各ボックスの＋ボタンにaddFoodNumber()を付与.
+        colClass[i].querySelectorAll(".btn-success")[0].addEventListener('click', addFoodNumber, false);
+
+        // 各ボックスの－ボタンにreduceFoodNumber()を付与.
+        colClass[i].querySelectorAll(".btn-danger")[0].addEventListener('click', reduceFoodNumber, false);
     };
 };
-erase();
+register();
 
-// 各Boxの食材の個数のところを配列foodNumbersの要素と対応させる関数.
-function loadFoodNumber() {
+// erase(),addFoodNumber(),reduceFoodNumber()を各Boxのボタンから解除する関数.
+function unregister() {
+    for (var i=0; i < colClass.length -1; i++) {
+        // 各Boxの削除ボタンからerase()を解除.
+        colClass[i].querySelectorAll(".btn-outline-danger")[0].removeEventListener('click', erase, false);
+
+        // 各ボックスの＋ボタンからaddFoodNumber()を解除.
+        colClass[i].querySelectorAll(".btn-success")[0].removeEventListener('click', addFoodNumber, false);
+
+        // 各ボックスの－ボタンからreduceFoodNumber()を解除.
+        colClass[i].querySelectorAll(".btn-danger")[0].removeEventListener('click', reduceFoodNumber, false);
+    };
+};
+
+// 各Boxの食材の個数と単位のところを配列foodNumbers,foodUnitsの要素と対応させる関数.
+function loadFoodData() {
     for (var i=0; i < foodTitles.length ; i++) {
-        colClass[i].querySelectorAll(".list-group-item")[0].innerHTML = foodNumbers[i] +"個";
-    }
-};
-
-// 「食材の個数を+1(or -1)する関数」を各Boxの+-ボタンに付与する関数.
-function changeFoodNumber() {
-    for (var i=0; i < colClass.length -1; i++) {
-        // 食材の個数を+1する関数.
-        colClass[i].querySelectorAll(".btn-success")[0].addEventListener('click', function() {// 各食材の個数を増やす関数.
-            // thisはクリックした要素にあたる.
-            var thisIndex =colClassArray.indexOf(this.closest(".col"));
-            foodNumbers[thisIndex] = foodNumbers[thisIndex] +1;
-            colClass[thisIndex].querySelectorAll(".list-group-item")[0].innerHTML = foodNumbers[thisIndex] +"個";
-        } , false);
-
-        // 食材の個数を-1する関数.
-        colClass[i].querySelectorAll(".btn-danger")[0].addEventListener('click', function() {// 各食材の個数を増やす関数.
-            // thisはクリックした要素にあたる.
-            var thisIndex =colClassArray.indexOf(this.closest(".col"));
-            if (foodNumbers[thisIndex] >= 1) {
-                foodNumbers[thisIndex] = foodNumbers[thisIndex] -1;
-            };
-            colClass[thisIndex].querySelectorAll(".list-group-item")[0].innerHTML = foodNumbers[thisIndex] +"個";
-        } , false);
+        colClass[i].querySelectorAll(".card-title")[0].innerHTML = foodTitles[i];
+        colClass[i].querySelectorAll(".list-group-item")[0].innerHTML = foodNumbers[i] +foodUnits[i];
     };
 };
-changeFoodNumber();
-
 
 // require('dotenv').config();
 // const { Configuration, OpenAIApi } = require('openai');
@@ -100,18 +124,41 @@ changeFoodNumber();
 // 初期データ.
 let foodNumbers = []; // 食品の個数.
 let foodTitles = []; // 食品の名前.
+let foodUnits =[];
+let foodNumbersJson;
+let foodTitlesJson;
+let foodUnitsJson;
 let mokuteki = "料理";
-
-// データの取得.
-function dataLoad(){
-    foodNumbers=localStorage.getItem('number');
-    foodTitles=localStorage.getItem('name');
-};
 
 //　データの保存.
 function dataSave(){
-    localStorage.setItem('number',foodNumbers);
-    localStorage.setItem('name',foodTitles);
+    foodNumbersJson = JSON.stringify(foodNumbers);
+    foodTitlesJson = JSON.stringify(foodTitles);
+    foodUnitsJson = JSON.stringify(foodUnits);
+    localStorage.setItem('number',foodNumbersJson);
+    localStorage.setItem('name',foodTitlesJson);
+    localStorage.setItem('unit',foodUnitsJson);
+};
+
+// データの取得と反映.
+function dataLoad(){
+    let currentFoodColsNumbers = colClass.length - 1;
+    foodNumbersJson=localStorage.getItem('number');
+    foodTitlesJson=localStorage.getItem('name');
+    foodUnitsJson=localStorage.getItem('unit');
+    const dataNumbers = JSON.parse(foodTitlesJson).length;
+    while (currentFoodColsNumbers < dataNumbers) {
+        boxCreate();
+        currentFoodColsNumbers++;
+    }
+    while (currentFoodColsNumbers > foodTitles.length) {
+        erase();
+        currentFoodColsNumbers--;
+    };
+    foodNumbers = JSON.parse(foodNumbersJson);
+    foodTitles = JSON.parse(foodTitlesJson);
+    foodUnits = JSON.parse(foodUnitsJson);
+    loadFoodData();
 };
 
 
@@ -162,18 +209,23 @@ async function ryourigpt() {
 // 以下、テスト実行用.
 foodArrayAdd("牛肉");
 foodNumbers[0] = 1;
+foodUnits.push("個");
 
 foodArrayAdd("トマト");
 foodNumbers[1] = 2;
+foodUnits.push("個");
 
 foodArrayAdd("卵");
 foodNumbers[2] = 3;
+foodUnits.push("個");
 
 foodArrayAdd("白菜");
 foodNumbers[3] = 4;
+foodUnits.push("個");
 
 foodArrayAdd("キャベツ");
 foodNumbers[4] = 5;
+foodUnits.push("個");
 
 loadFoodNumber();
 
@@ -186,3 +238,4 @@ ryourigpt().then(reply => {
 
 console.log(foodTitles);
 console.log(foodNumbers);
+console.log(document.getElementById("addUnitSelect").value);
