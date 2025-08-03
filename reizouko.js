@@ -48,10 +48,6 @@ function boxCreate() {
     foodUnits.push(selectUnit);
     unregister();
     register();
-    console.log(foodTitles);
-    console.log(foodNumbers);
-    console.log(foodUnits);
-    console.log(selectUnit);
 };
 
 // Boxを削除する関数.
@@ -150,9 +146,9 @@ function dataLoad(){
     while (currentFoodColsNumbers < dataNumbers) {
         boxCreate();
         currentFoodColsNumbers++;
-    }
-    while (currentFoodColsNumbers > foodTitles.length) {
-        erase();
+    };
+    while (currentFoodColsNumbers > dataNumbers) {
+        colClass[0].remove();
         currentFoodColsNumbers--;
     };
     foodNumbers = JSON.parse(foodNumbersJson);
@@ -227,7 +223,7 @@ foodArrayAdd("キャベツ");
 foodNumbers[4] = 5;
 foodUnits.push("個");
 
-loadFoodNumber();
+loadFoodData();
 
 ryourijouken("簡単な料理");
 
@@ -235,7 +231,3 @@ ryourijouken("簡単な料理");
 ryourigpt().then(reply => {
     console.log("ChatGPTの提案:", reply);
 });
-
-console.log(foodTitles);
-console.log(foodNumbers);
-console.log(document.getElementById("addUnitSelect").value);
