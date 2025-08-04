@@ -6,11 +6,28 @@
         <link rel="stylesheet" href="style.css" type="text/css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <div class="pageAll"><!--ページ全体の余白について-->
-            <button type="button" class="btn btn-primary" onclick="dataSave()">Save</button>
-            <button type="button" class="btn btn-primary" onclick="dataLoad()">Load</button>
-            <form>
-                <input class="form-control" type="text" name="openAiApiKey" placeholder="Open AI API Key">
+            <div class="padding-1">
+                <button type="button" class="btn btn-primary" onclick="dataSave()">Save</button>
+                <button type="button" class="btn btn-primary" onclick="dataLoad()">Load</button>
+                <button type="button" class="btn btn-primary" onclick="ryourigpt()">chatGPTに聞く</button>
+                <form>
+                    <select class="form-select" id="reqestSelect">
+                        <option value="easyCook">簡単な料理</option>
+                        <option value="healthy">健康的な料理</option>
+                        <option value="muscle">筋トレに良い料理</option>
+                        <option value="easyWash">洗い物が少なくて済む料理</option>
+                        <option value="others">その他：「～な料理」で以下に入力してください</option>
+                    </select>
+                    <input class="form-control" type="text" id="requestOther" name="requestOther" placeholder="その他：「～な料理」で入力してください" readonly>
+                </form>
+            </div>
+            <form class="padding-1">
+                <input class="form-control" type="text" id="openAiApiKey" name="openAiApiKey" placeholder="Open AI API Key">
             </form>
+            <div class="mb-3">
+                <label class="form-label">chatGPTの返答</label>
+                <textarea class="form-control" rows="6" id="response" readonly></textarea>
+            </div>
             <div class="row row-cols-1 row-cols-md-3 g-4" id="boxCols">
                 <div class="col">
                     <div class="card text-dark border-dark bg-light mb-3" style="max-width: 18rem;">

@@ -3,11 +3,21 @@ var colClass = document.getElementsByClassName("col");
 var colClassArray =Array.prototype.slice.call(colClass);
 const addBox = document.getElementById("addBox");
 const selectUnits = document.getElementById("addUnitSelect");
+const selectRequests = document.getElementById("reqestSelect");
 let selectUnit = "個";
+let selectRequest = "簡単な料理";
 selectUnits.addEventListener("change",(event) =>{
     selectUnit = selectUnits.options[selectUnits.selectedIndex].label;
 });
-
+selectRequests.addEventListener("change",(event) =>{
+    selectRequest = selectRequests.options[selectRequests.selectedIndex].label;
+    ryourijouken(selectRequest);
+    if (selectRequest == "その他：「～な料理」で以下に入力してください") {
+        document.getElementById("requestOther").readOnly = false;
+    } else {
+        document.getElementById("requestOther").readOnly = true;
+    };
+});
 
 // ボックスを新たに生成する関数.
 function boxCreate() {
@@ -114,9 +124,6 @@ function loadFoodData() {
     };
 };
 
-// require('dotenv').config();
-// const { Configuration, OpenAIApi } = require('openai');
-
 // 初期データ.
 let foodNumbers = []; // 食品の個数.
 let foodTitles = []; // 食品の名前.
@@ -180,27 +187,39 @@ function ryourijouken(condition) {
 
 // ChatGPT APIで料理を提案.
 async function ryourigpt() {
+    if (selectRequest == "その他：「～な料理」で以下に入力してください") {
+        selectRequest = document.getElementById("requestOther").value;
+        ryourijouken(selectRequest)
+    };
+    const openAiApiKey = document.getElementById("openAiApiKey").value;
     let syokuzai = "";
     for (let i = 0; i < foodNumbers.length; i++) {
-        syokuzai += `${foodTitles[i]}が${foodNumbers[i]}個、`;
+        syokuzai += `${foodTitles[i]}が${foodNumbers[i]}${foodUnits[i]}、`;
     }
 
+    // 送信メッセージ.
     const yosei = `今、冷蔵庫に${syokuzai}あります。この食材を使って作ることのできる${mokuteki}を教えてください`;
 
-    const configuration = new Configuration({
-        apiKey: process.env.OPENAI_API_KEY,
+    // fetch で OpenAI API にリクエスト
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + openAiApiKey 
+        },
+        body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [{ role: 'user', content: yosei }]
+        })
     });
 
-    const openai = new OpenAIApi(configuration);
+    // レスポンスボディを JSON として取り出す
+    const rdata = await response.json();
 
-    const completion = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: yosei }],
-    });
+    // 応答メッセージを抜き出して出力
+    document.getElementById("response").value = rdata.choices[0].message.content;
+};
 
-    const reply = completion.data.choices[0].message.content;
-    return reply;
-}
 
 // 以下、テスト実行用.
 foodArrayAdd("牛肉");
@@ -224,10 +243,3 @@ foodNumbers[4] = 5;
 foodUnits.push("個");
 
 loadFoodData();
-
-ryourijouken("簡単な料理");
-
-// 実行.
-ryourigpt().then(reply => {
-    console.log("ChatGPTの提案:", reply);
-});
