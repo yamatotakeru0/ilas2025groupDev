@@ -48,8 +48,8 @@ function boxCreate() {
     child1111.append(child11111);
     child1112.insertAdjacentHTML("beforeend",foodTitle);
     child1113.insertAdjacentHTML("beforeend",'<li class="list-group-item">0'+ selectUnit +'</li>');
-    child1114.insertAdjacentHTML("beforeend",'<a class="btn btn-success" href="#" role="button">＋</a>');
-    child1115.insertAdjacentHTML("beforeend",'<a href="#" class="btn btn-danger">－</a>');
+    child1114.insertAdjacentHTML("beforeend",'<a class="btn btn-success" role="button">＋</a>');
+    child1115.insertAdjacentHTML("beforeend",'<a class="btn btn-danger">－</a>');
     child11111.insertAdjacentHTML("beforeend",'<button class="btn btn-outline-danger" type="button">×</button>');
     boxCols.insertBefore(child1,addBox);
     colClass = document.getElementsByClassName("col");
@@ -198,7 +198,7 @@ async function ryourigpt() {
     }
 
     // 送信メッセージ.
-    const yosei = `今、冷蔵庫に${syokuzai}あります。この食材を使って作ることのできる${mokuteki}を教えてください`;
+    const yosei = `今、冷蔵庫に${syokuzai}あります。この食材を使って作ることのできる${mokuteki}を作り方も含めて教えてください`;
 
     // fetch で OpenAI API にリクエスト
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
